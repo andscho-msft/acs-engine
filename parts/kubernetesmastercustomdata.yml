@@ -379,6 +379,8 @@ runcmd:
 - systemctl stop etcd
 - sudo -u etcd rm -rf /var/lib/etcd/default
 - sudo /bin/sed -i s/Restart=on-abnormal/Restart=always/g /lib/systemd/system/etcd.service
+- sudo /bin/sed -i 's/#RestartSec=10s/RestartSec=1s/g' /lib/systemd/system/etcd.service
+- sudo /bin/sed -i 's/Wants=network-online\.target/Wants=network-online.target\nStartLimitIntervalSec=0/g' /lib/systemd/system/etcd.service
 - systemctl daemon-reload
 - systemctl restart etcd
 - for i in $(seq 1 20); do curl --max-time 60 http://127.0.0.1:2379/v2/machines; [ $? -eq 0 ] && break || sleep 5; done
